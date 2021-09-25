@@ -84,6 +84,7 @@ class _MyHomePageState extends State<MyHomePage> {
           builder: (BuildContext context, LoadStatus? mode) {
             Widget body;
             if (mode == LoadStatus.idle) {
+              //如果不需要可以返回一个看不到的元素：Offstage
               body = Text("向上拉可刷新数据");
             } else if (mode == LoadStatus.loading) {
               // 转圈圈
