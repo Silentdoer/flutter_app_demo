@@ -84,18 +84,20 @@ class _MyHomePageState extends State<MyHomePage> {
           builder: (BuildContext context, LoadStatus? mode) {
             Widget body;
             if (mode == LoadStatus.idle) {
-              body = Text("pull up load");
+              body = Text("向上拉可刷新数据");
             } else if (mode == LoadStatus.loading) {
+              // 转圈圈
               body = CupertinoActivityIndicator();
             } else if (mode == LoadStatus.failed) {
               body = Text("Load Failed!Click retry!");
             } else if (mode == LoadStatus.canLoading) {
-              body = Text("release to load more");
+              // 应该是指当前的list的数据比count要少的时候？
+              body = Text("释放上拉操作开始获取数据");
             } else {
               body = Text("No more Data");
             }
             return Container(
-              height: 55.0,
+              //height: 10.vh,
               child: Center(child: body),
             );
           },
@@ -196,7 +198,9 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
         currentIndex: _bottomIdx,
         onTap: (idx) {
-          _bottomIdx = idx;
+          setState(() {
+            _bottomIdx = idx;
+          });
         },
       ),
       floatingActionButton: FloatingActionButton(
