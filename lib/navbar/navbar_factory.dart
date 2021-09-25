@@ -25,4 +25,12 @@ class NavbarFactory {
       actions: actions,
     );
   }
+
+  static PreferredSizeWidget textTitleBar(String title, {TextStyle style = const TextStyle(fontWeight: FontWeight.bold)}) {
+    return AppBar(
+      centerTitle: true,
+      title: Text(title, style: style,),
+      toolbarHeight: 8.vh,
+    );
+  }
 }
