@@ -87,9 +87,10 @@ class _MyHomePageState extends State<MyHomePage> {
         // 顶部下拉时执行
         onRefresh: _onRefresh,
         // 底部上拉时的显示
-        footer: CustomFooter(
+        footer: CustomFooter(loadStyle: LoadStyle.ShowWhenLoading,height: 6.vh,
           builder: (BuildContext context, LoadStatus? mode) {
-            Widget body;
+            return SizedBox.shrink();
+            /* Widget body;
             if (mode == LoadStatus.idle) {
               //如果不需要可以返回一个看不到的元素：Offstage【用SizedBox.shrink()比较好，一个没有大小的组件】
               //body = Text("向上拉可刷新数据");
@@ -112,7 +113,7 @@ class _MyHomePageState extends State<MyHomePage> {
             return Container(
               //height: 10.vh,
               child: Center(child: body),
-            );
+            ); */
           },
         ),
         controller: _refreshController,
@@ -195,17 +196,18 @@ class _MyHomePageState extends State<MyHomePage> {
               /* return ListTile(
                 title: Text('Silentdoer $index'),
               ); */
-              return SizedBox(
+              return Container(
                 height: 100.vh,
+                color: Colors.red,
                 // TODO 这个ListView的下拉不会导致刷新【似乎是Scroll事件没有冒泡？】
-                child: ListView.builder(
+                /* child: ListView.builder(
                   itemBuilder: (context, index) {
                     return ListTile(
                       title: Text('KKK $index'),
                     );
                   },
                   itemCount: 30,
-                ),
+                ), */
               );
             }
           },
