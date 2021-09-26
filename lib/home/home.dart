@@ -87,7 +87,9 @@ class _MyHomePageState extends State<MyHomePage> {
         // 顶部下拉时执行
         onRefresh: _onRefresh,
         // 底部上拉时的显示
-        footer: CustomFooter(loadStyle: LoadStyle.ShowWhenLoading,height: 6.vh,
+        footer: CustomFooter(
+          loadStyle: LoadStyle.ShowWhenLoading,
+          height: 6.vh,
           builder: (BuildContext context, LoadStatus? mode) {
             return SizedBox.shrink();
             /* Widget body;
@@ -122,10 +124,76 @@ class _MyHomePageState extends State<MyHomePage> {
         child: ListView.builder(
           itemBuilder: (context, index) {
             if (index == 0) {
-              return Column(
+              return Stack(
+                alignment: Alignment.bottomCenter,
+                children: [
+                  SizedBox(
+                    height: 12.vh,
+                    width: 90.vw,
+                    child: CarouselSlider(
+                      options: CarouselOptions(
+
+                          /// .h是高度相对父元素百分之百，.w是宽度相对父元素百分之百
+                          height: 100.h,
+                          autoPlay: true,
+                          autoPlayInterval: Duration(seconds: 3),
+                          autoPlayCurve: Curves.fastOutSlowIn,
+                          viewportFraction: 1,
+                          enlargeCenterPage: true,
+                          initialPage: _currentSwiperItemIdx,
+                          onPageChanged: (index, reason) {
+                            setState(() {
+                              _currentSwiperItemIdx = index;
+                            });
+                          }),
+                      items: _swiperItems.map((i) {
+                        return Builder(
+                          builder: (BuildContext context) {
+                            return Container(
+                                width: MediaQuery.of(context).size.width,
+                                decoration: BoxDecoration(color: Colors.amber),
+                                child: Text(
+                                  'text $i',
+                                  style: TextStyle(fontSize: 16.0),
+                                ));
+                          },
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 1.vh,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: _swiperItems.map((item) {
+                        return GestureDetector(
+                          child: Container(
+                            width: 1.vw,
+                            height: 1.vw,
+                            margin: EdgeInsets.symmetric(horizontal: 0.5.vw),
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: (Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? Colors.white
+                                        : Colors.black)
+                                    .withOpacity(
+                                        _swiperItems[_currentSwiperItemIdx] ==
+                                                item
+                                            ? 0.9
+                                            : 0.4)),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  )
+                ],
+              );
+              /* return Column(
                 // Center is a layout widget. It takes a single child and positions it
                 // in the middle of the parent.
                 children: [
+                  
                   SizedBox(
                     height: 12.vh,
                     width: 90.vw,
@@ -193,7 +261,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     ],
                   ),
                 ],
-              );
+              ); */
             } else if (index == 1) {
               return Container(
                 height: 20.vh,
