@@ -48,6 +48,7 @@ class _MyHomePageState extends State<MyHomePage> {
       RefreshController(initialRefresh: false);
 
   void _onRefresh() async {
+    print('执行了onRefresh');
     // monitor network fetch
     await Future.delayed(Duration(milliseconds: 1000));
     // if failed,use refreshFailed()
@@ -55,6 +56,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _onLoading() async {
+    print('执行了onLoading');
     // monitor network fetch
     await Future.delayed(Duration(milliseconds: 1000));
     // if failed,use loadFailed(),if no data return,use LoadNodata()
@@ -75,17 +77,27 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: NavbarFactory.textTitleBar("首页"),
       body: SmartRefresher(
+        // 是否生效下拉，上拉
         enablePullDown: true,
         enablePullUp: true,
+        // 顶部下拉时的显示UI
         header: WaterDropHeader(),
+        // 顶部上拉时执行；
         onLoading: _onLoading,
+        // 顶部下拉时执行
         onRefresh: _onRefresh,
+        // 底部上拉时的显示
         footer: CustomFooter(
           builder: (BuildContext context, LoadStatus? mode) {
             Widget body;
             if (mode == LoadStatus.idle) {
-              //如果不需要可以返回一个看不到的元素：Offstage
-              body = Text("向上拉可刷新数据");
+              //如果不需要可以返回一个看不到的元素：Offstage【用SizedBox.shrink()比较好，一个没有大小的组件】
+              //body = Text("向上拉可刷新数据");
+              // 没用，生效了上拉，这个组件会自动为它留一个位置
+              //body = SizedBox.shrink();
+              return Offstage(
+                offstage: false,
+              );
             } else if (mode == LoadStatus.loading) {
               // 转圈圈
               body = CupertinoActivityIndicator();
@@ -104,6 +116,8 @@ class _MyHomePageState extends State<MyHomePage> {
           },
         ),
         controller: _refreshController,
+        // FLAG 这个ListView是布局而不是数据展示，即它可以认为是Column，如果ListView内部还需要ListView，则要求子ListView
+        // 有具体的高度【而且貌似子ListView不能触发刷新】【但是ListView自带Scroll，因此最后一个content 的元素可以设置大小大一点
         child: ListView.builder(
           itemBuilder: (context, index) {
             if (index == 0) {
@@ -178,15 +192,28 @@ class _MyHomePageState extends State<MyHomePage> {
                 color: Colors.blue,
               );
             } else {
-              return ListTile(
-                title: Text('老孟$index'),
+              /* return ListTile(
+                title: Text('Silentdoer $index'),
+              ); */
+              return SizedBox(
+                height: 100.vh,
+                // TODO 这个ListView的下拉不会导致刷新【似乎是Scroll事件没有冒泡？】
+                child: ListView.builder(
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text('KKK $index'),
+                    );
+                  },
+                  itemCount: 30,
+                ),
               );
             }
           },
 
           /// 似乎是item的高度？如果没有指定则按item实际高度来排列
           //itemExtent: 200,
-          itemCount: 30,
+          // 元素个数，这里将ListView当成布局，因此元素个数是行布局个数【多少行】
+          itemCount: 3,
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
