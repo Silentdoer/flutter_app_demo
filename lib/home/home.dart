@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app_demo/floating_button/popup_floating_button.dart';
 import 'package:flutter_app_demo/navbar/navbar_factory.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:resize/resize.dart';
@@ -338,10 +339,8 @@ class _MyHomePageState extends State<MyHomePage> {
           });
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+      floatingActionButton: PopupFloatingButton(
+        _incrementCounter,
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
