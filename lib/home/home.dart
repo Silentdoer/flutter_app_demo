@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -77,22 +79,22 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: NavbarFactory.textTitleBar("首页"),
       body: SmartRefresher(
-        // 是否生效下拉，上拉
-        enablePullDown: true,
-        enablePullUp: true,
-        // 顶部下拉时的显示UI
-        header: WaterDropHeader(),
-        // 顶部上拉时执行；
-        onLoading: _onLoading,
-        // 顶部下拉时执行
-        onRefresh: _onRefresh,
-        // 底部上拉时的显示
-        footer: CustomFooter(
-          loadStyle: LoadStyle.ShowWhenLoading,
-          height: 6.vh,
-          builder: (BuildContext context, LoadStatus? mode) {
-            return SizedBox.shrink();
-            /* Widget body;
+          // 是否生效下拉，上拉
+          enablePullDown: true,
+          enablePullUp: true,
+          // 顶部下拉时的显示UI
+          header: WaterDropHeader(),
+          // 顶部上拉时执行；
+          onLoading: _onLoading,
+          // 顶部下拉时执行
+          onRefresh: _onRefresh,
+          // 底部上拉时的显示
+          footer: CustomFooter(
+            loadStyle: LoadStyle.ShowWhenLoading,
+            height: 6.vh,
+            builder: (BuildContext context, LoadStatus? mode) {
+              return SizedBox.shrink();
+              /* Widget body;
             if (mode == LoadStatus.idle) {
               //如果不需要可以返回一个看不到的元素：Offstage【用SizedBox.shrink()比较好，一个没有大小的组件】
               //body = Text("向上拉可刷新数据");
@@ -116,79 +118,105 @@ class _MyHomePageState extends State<MyHomePage> {
               //height: 10.vh,
               child: Center(child: body),
             ); */
-          },
-        ),
-        controller: _refreshController,
-        // FLAG 这个ListView是布局而不是数据展示，即它可以认为是Column，如果ListView内部还需要ListView，则要求子ListView
-        // 有具体的高度【而且貌似子ListView不能触发刷新】【但是ListView自带Scroll，因此最后一个content 的元素可以设置大小大一点
-        child: ListView.builder(
+            },
+          ),
+          controller: _refreshController,
+          // FLAG 这个ListView是布局而不是数据展示，即它可以认为是Column，如果ListView内部还需要ListView，则要求子ListView
+          // 有具体的高度【而且貌似子ListView不能触发刷新】【但是ListView自带Scroll，因此最后一个content 的元素可以设置大小大一点
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Stack(
+                  alignment: Alignment.bottomCenter,
+                  children: [
+                    SizedBox(
+                      height: 12.vh,
+                      width: 90.vw,
+                      child: CarouselSlider(
+                        options: CarouselOptions(
+
+                            /// .h是高度相对父元素百分之百，.w是宽度相对父元素百分之百
+                            height: 100.h,
+                            autoPlay: true,
+                            autoPlayInterval: Duration(seconds: 3),
+                            autoPlayCurve: Curves.fastOutSlowIn,
+                            viewportFraction: 1,
+                            enlargeCenterPage: true,
+                            initialPage: _currentSwiperItemIdx,
+                            onPageChanged: (index, reason) {
+                              setState(() {
+                                _currentSwiperItemIdx = index;
+                              });
+                            }),
+                        items: _swiperItems.map((i) {
+                          return Builder(
+                            builder: (BuildContext context) {
+                              return Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  decoration:
+                                      BoxDecoration(color: Colors.amber),
+                                  child: Text(
+                                    'text $i',
+                                    style: TextStyle(fontSize: 1.rem),
+                                  ));
+                            },
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                    Positioned(
+                      bottom: 1.vh,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: _swiperItems.map((item) {
+                          return GestureDetector(
+                            child: Container(
+                              width: max(1.vh, 1.vw),
+                              height: max(1.vh, 1.vw),
+                              margin: EdgeInsets.symmetric(
+                                  horizontal: max(0.5.vh, 0.5.vw)),
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: (Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Colors.white
+                                          : Colors.black)
+                                      .withOpacity(
+                                          _swiperItems[_currentSwiperItemIdx] ==
+                                                  item
+                                              ? 0.9
+                                              : 0.4)),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    )
+                  ],
+                ),
+                Container(
+                  height: 20.vh,
+                  width: 100.vw,
+                  color: Colors.blue,
+                ),
+                Container(
+                  height: 100.vh,
+                  color: Colors.red,
+                  // TODO 这个ListView的下拉不会导致刷新【似乎是Scroll事件没有冒泡？】
+                  /* child: ListView.builder(
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text('KKK $index'),
+                    );
+                  },
+                  itemCount: 30,
+                ), */
+                )
+              ],
+            ),
+          ) /*  ListView.builder(
           itemBuilder: (context, index) {
             if (index == 0) {
-              return Stack(
-                alignment: Alignment.bottomCenter,
-                children: [
-                  SizedBox(
-                    height: 12.vh,
-                    width: 90.vw,
-                    child: CarouselSlider(
-                      options: CarouselOptions(
-
-                          /// .h是高度相对父元素百分之百，.w是宽度相对父元素百分之百
-                          height: 100.h,
-                          autoPlay: true,
-                          autoPlayInterval: Duration(seconds: 3),
-                          autoPlayCurve: Curves.fastOutSlowIn,
-                          viewportFraction: 1,
-                          enlargeCenterPage: true,
-                          initialPage: _currentSwiperItemIdx,
-                          onPageChanged: (index, reason) {
-                            setState(() {
-                              _currentSwiperItemIdx = index;
-                            });
-                          }),
-                      items: _swiperItems.map((i) {
-                        return Builder(
-                          builder: (BuildContext context) {
-                            return Container(
-                                width: MediaQuery.of(context).size.width,
-                                decoration: BoxDecoration(color: Colors.amber),
-                                child: Text(
-                                  'text $i',
-                                  style: TextStyle(fontSize: 16.0),
-                                ));
-                          },
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                  Positioned(
-                    bottom: 1.vh,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: _swiperItems.map((item) {
-                        return GestureDetector(
-                          child: Container(
-                            width: 1.vw,
-                            height: 1.vw,
-                            margin: EdgeInsets.symmetric(horizontal: 0.5.vw),
-                            decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: (Theme.of(context).brightness ==
-                                            Brightness.dark
-                                        ? Colors.white
-                                        : Colors.black)
-                                    .withOpacity(
-                                        _swiperItems[_currentSwiperItemIdx] ==
-                                                item
-                                            ? 0.9
-                                            : 0.4)),
-                          ),
-                        );
-                      }).toList(),
-                    ),
-                  )
-                ],
-              );
+              return ;
               /* return Column(
                 // Center is a layout widget. It takes a single child and positions it
                 // in the middle of the parent.
@@ -292,9 +320,10 @@ class _MyHomePageState extends State<MyHomePage> {
           //itemExtent: 200,
           // 元素个数，这里将ListView当成布局，因此元素个数是行布局个数【多少行】
           itemCount: 3,
-        ),
-      ),
+        ), */
+          ),
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.purple,
         items: [
           BottomNavigationBarItem(label: 'A', icon: Icon(Icons.ac_unit)),
           BottomNavigationBarItem(
