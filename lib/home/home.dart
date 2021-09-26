@@ -160,7 +160,13 @@ class _MyHomePageState extends State<MyHomePage> {
                       }).toList(),
                     ),
                   ),
-                  Row(
+                  // Stack的大小和它最大的元素有关
+                  Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Container(width: 3, height: 3,color: Colors.deepOrange),
+                      // fuck, 这个无法超出Stack的元素显示范围（所以不要设置负值），所以没法真正实现css的fixed
+                      Positioned(child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: _swiperItems.map((item) {
                       return GestureDetector(
@@ -183,6 +189,8 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                       );
                     }).toList(),
+                  ),)
+                    ],
                   ),
                 ],
               );
