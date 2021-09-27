@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:resize/resize.dart';
 
 class PopupFloatingButton extends StatefulWidget {
   final VoidCallback? onPressed;
@@ -28,10 +29,14 @@ class _PopupFloatingButtonState extends State<PopupFloatingButton> {
     var size = renderBox.size;
     var offset = renderBox.localToGlobal(Offset.zero);
 
+    // TODO 可以试着用SizedBox.shrink()+Overlay来接近实现一个fixed【之所以是接近是因为还是需要有个组件作为跳板，只不过这个组件可以是大小为0,
+    // 但是即便大小是0，对于一些组件，比如ListView的item而言它也占“位置”，比如会有两条分隔线；
     return OverlayEntry(
         builder: (context) => Positioned(
-              left: offset.dx,
-              top: offset.dy - popupHeight - 5,
+              /* left: offset.dx,
+              top: offset.dy - popupHeight - 5, */
+              left: 5.vw,
+              top: 21.vh,
               // 弹窗的width，child的with【即一个是弹窗容器的width，一个是弹窗容器子容器的width】
               // 这里不设置由子容器来决定弹窗大小
               //width: size.width,

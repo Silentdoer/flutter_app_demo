@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app_demo/floating_button/fixed_like_component.dart';
 import 'package:flutter_app_demo/floating_button/popup_floating_button.dart';
 import 'package:flutter_app_demo/navbar/navbar_factory.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -199,6 +200,16 @@ class _MyHomePageState extends State<MyHomePage> {
                   width: 100.vw,
                   color: Colors.blue,
                 ),
+                
+                FixedLikeComponent(Container(
+                  height: 20.vh,
+                  width: 20.vh,
+                  color: Colors.pink,
+                ), Offset(5.vw, 22.vh)),
+                //Offstage(),
+                //SizedBox.shrink(),
+                //Visibility(child: Text('kkk'), visible: false,),
+                //Opacity(opacity: 0.2, child: Text('kkk'),),
                 Container(
                   height: 100.vh,
                   color: Colors.red,
