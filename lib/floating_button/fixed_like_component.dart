@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 /// 不要用于ListView item元素等【主要是因为item之间可能有分隔线，那么即便某个item不占空间也会因为存在item而产生分隔线】，
 /// 还有就是不要用于那种一定有面积的元素的子元素，否则虽然这个元素没有面积，但是其父元素仍然会占用面积（这个就看具体情况了）
+/// 不过由于其全局性，所以最好至少是放到body的子层以上，否则就和css一样乱了难找代码；
 class FixedLikeComponent extends StatefulWidget {
   final Widget child;
 

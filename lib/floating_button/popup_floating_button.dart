@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:resize/resize.dart';
 
+/// 点击按钮显示悬浮框
 class PopupFloatingButton extends StatefulWidget {
   final VoidCallback? onPressed;
 

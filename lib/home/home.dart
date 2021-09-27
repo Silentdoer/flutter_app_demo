@@ -200,12 +200,35 @@ class _MyHomePageState extends State<MyHomePage> {
                   width: 100.vw,
                   color: Colors.blue,
                 ),
-                
-                FixedLikeComponent(Container(
-                  height: 20.vh,
-                  width: 20.vh,
-                  color: Colors.pink,
-                ), Offset(5.vw, 22.vh)),
+
+                FixedLikeComponent(
+                    Container(
+                      height: 20.vh,
+                      width: 20.vh,
+                      color: Colors.pink,
+                    ),
+                    Offset(5.vw, 22.vh)),
+                TextButton(
+                    onPressed: () {
+                      showModalBottomSheet(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return Container(
+                            height: 200,
+                            width: double.infinity,
+                            child: Center(child: Text("showModalBottomSheet")),
+                            decoration: BoxDecoration(
+                              color: Colors.blueAccent,
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(25),
+                                topRight: Radius.circular(25),
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                    child: Text('bottomPopup')),
                 //Offstage(),
                 //SizedBox.shrink(),
                 //Visibility(child: Text('kkk'), visible: false,),

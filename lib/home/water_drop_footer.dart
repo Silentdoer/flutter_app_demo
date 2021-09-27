@@ -13,7 +13,7 @@ import 'package:flutter/material.dart'
 import 'package:flutter/widgets.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-/// QQ ios refresh  header effect
+/// 类似顶部下拉的样式，这里实现底部上拉
 class WaterDropFooter extends LoadIndicator {
   /// refreshing content
   final Widget? load;
