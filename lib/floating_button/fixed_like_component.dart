@@ -45,7 +45,18 @@ class _FixedLikeComponentState extends State<FixedLikeComponent> {
     /// 不能这么写，overlayEntry这个元素必须是在当前widgetbuild之后才能显示【用delay试下】
     /// 用delay是可以的，这里只delay了1微秒（比毫秒小，毫秒用户都无感知【还是用毫秒好，防止不精确问题】），对于用户而言是完全无感知的，所以这种方式可行；
     /// 但是注意，如果直接这么写，而不remove会导致reload会越来越多个浮动控件；
-    Future.delayed(Duration(milliseconds: 1), () {
+    /* Future.delayed(Duration(milliseconds: 1), () {
+      // Overlay的原理是窗口外层本来就有一个Stack，而且它的children里有
+      // 一个Overlay对象，因此这里将overlayEntry插入到overlay里就相当于
+      // 往最外层的Stack里添加了子孙元素；
+      if (!created) {
+        created = true;
+        this._overlayEntry = this._createOverlayEntry();
+        Overlay.of(context)!.insert(this._overlayEntry!);
+      }
+    }); */
+    // 应该是指这个元素显示之后的回调？
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
       if (!created) {
         created = true;
         this._overlayEntry = this._createOverlayEntry();
