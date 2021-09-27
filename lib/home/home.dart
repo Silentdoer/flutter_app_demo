@@ -211,6 +211,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 TextButton(
                     onPressed: () {
                       showModalBottomSheet(
+                        backgroundColor: Colors.transparent,
                         context: context,
                         builder: (BuildContext context) {
                           return Container(
