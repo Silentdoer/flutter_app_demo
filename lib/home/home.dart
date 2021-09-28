@@ -95,31 +95,31 @@ class _MyHomePageState extends State<MyHomePage> {
             loadStyle: LoadStyle.ShowWhenLoading,
             height: 6.vh,
             builder: (BuildContext context, LoadStatus? mode) {
-              return SizedBox.shrink();
-              /* Widget body;
-            if (mode == LoadStatus.idle) {
-              //如果不需要可以返回一个看不到的元素：Offstage【用SizedBox.shrink()比较好，一个没有大小的组件】
-              //body = Text("向上拉可刷新数据");
-              // 没用，生效了上拉，这个组件会自动为它留一个位置
-              //body = SizedBox.shrink();
-              return Offstage(
-                offstage: false,
+              //return SizedBox.shrink();
+              Widget body;
+              if (mode == LoadStatus.idle) {
+                //如果不需要可以返回一个看不到的元素：Offstage【用SizedBox.shrink()比较好，一个没有大小的组件】
+                //body = Text("向上拉可刷新数据");
+                // 没用，生效了上拉，这个组件会自动为它留一个位置
+                //body = SizedBox.shrink();
+                return Offstage(
+                  offstage: false,
+                );
+              } else if (mode == LoadStatus.loading) {
+                // 转圈圈
+                body = CupertinoActivityIndicator();
+              } else if (mode == LoadStatus.failed) {
+                body = Text("Load Failed!Click retry!");
+              } else if (mode == LoadStatus.canLoading) {
+                // 应该是指当前的list的数据比count要少的时候？
+                body = Text("释放上拉操作开始获取数据");
+              } else {
+                body = Text("No more Data");
+              }
+              return Container(
+                //height: 10.vh,
+                child: Center(child: body),
               );
-            } else if (mode == LoadStatus.loading) {
-              // 转圈圈
-              body = CupertinoActivityIndicator();
-            } else if (mode == LoadStatus.failed) {
-              body = Text("Load Failed!Click retry!");
-            } else if (mode == LoadStatus.canLoading) {
-              // 应该是指当前的list的数据比count要少的时候？
-              body = Text("释放上拉操作开始获取数据");
-            } else {
-              body = Text("No more Data");
-            }
-            return Container(
-              //height: 10.vh,
-              child: Center(child: body),
-            ); */
             },
           ),
           controller: _refreshController,
@@ -137,7 +137,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: CarouselSlider(
                         options: CarouselOptions(
 
-                            /// .h是高度相对父元素百分之百，.w是宽度相对父元素百分之百
+                            /// .h是高度相对父元素百分之百，.w是宽度相对父元素百分之百【错】
                             height: 100.h,
                             autoPlay: true,
                             autoPlayInterval: Duration(seconds: 3),
@@ -230,6 +230,18 @@ class _MyHomePageState extends State<MyHomePage> {
                       );
                     },
                     child: Text('bottomPopup')),
+                TextButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/detail',
+                          arguments: "aaaa");
+                    },
+                    child: Text('detail')),
+                TextButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/needAuth',
+                          arguments: "aaaa");
+                    },
+                    child: Text('auth')),
                 //Offstage(),
                 //SizedBox.shrink(),
                 //Visibility(child: Text('kkk'), visible: false,),

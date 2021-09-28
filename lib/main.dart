@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app_demo/detail_page/detail_page.dart';
+import 'package:flutter_app_demo/need_auth_page/need_auth_page.dart';
 import 'package:resize/resize.dart';
 
 import 'home/home.dart';
@@ -6,6 +8,12 @@ import 'home/home.dart';
 void main() {
   runApp(const MyApp());
 }
+
+var routeMap = <String, WidgetBuilder>{
+  '/': (context) => const MyHomePage(title: 'Flutter Demo Home Page'),
+  '/detail': (context) => DetailPage(),
+  '/needAuth': (context) => NeedAuthPage(),
+};
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -15,6 +23,17 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return Resize(
         builder: () => MaterialApp(
+              initialRoute: '/',
+              //routes: routeMap,
+              // 有了这个就不能有routes，否则这个拦截无效；
+              onGenerateRoute: (RouteSettings settings) {
+                if (settings.name == '/detail') {
+                  // login
+                  return MaterialPageRoute(builder: routeMap['/needAuth']!);
+                } else {
+                  return MaterialPageRoute(builder: routeMap[settings.name]!);
+                }
+              },
               title: 'Flutter Demo',
               theme: ThemeData(
                 // This is the theme of your application.
@@ -28,7 +47,8 @@ class MyApp extends StatelessWidget {
                 // is not restarted.
                 primarySwatch: Colors.lightGreen,
               ),
-              home: const MyHomePage(title: 'Flutter Demo Home Page'),
+              //有了initialRoute+routes(routes里有initialRoute前提下)后home就不能写了；
+              //home: const MyHomePage(title: 'Flutter Demo Home Page'),
             ));
   }
 }
