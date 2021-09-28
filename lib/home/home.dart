@@ -239,7 +239,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 TextButton(
                     onPressed: () {
                       Navigator.pushNamed(context, '/needAuth',
-                          arguments: "aaaa");
+                          arguments: "bbb");
                     },
                     child: Text('auth')),
                 //Offstage(),

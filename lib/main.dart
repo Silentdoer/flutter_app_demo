@@ -27,11 +27,15 @@ class MyApp extends StatelessWidget {
               //routes: routeMap,
               // 有了这个就不能有routes，否则这个拦截无效；
               onGenerateRoute: (RouteSettings settings) {
+                // 主页面/加载也会触发
+                // pop(..)的不会触发
+                print('back 触发吗？${settings.name}, ${settings.arguments}');
                 if (settings.name == '/detail') {
                   // login
-                  return MaterialPageRoute(builder: routeMap['/needAuth']!);
+                  // 这里不会二次触发onGenerateRoute
+                  return MaterialPageRoute(builder: routeMap['/needAuth']!, settings: settings);
                 } else {
-                  return MaterialPageRoute(builder: routeMap[settings.name]!);
+                  return MaterialPageRoute(builder: routeMap[settings.name]!, settings: settings);
                 }
               },
               title: 'Flutter Demo',
