@@ -80,177 +80,199 @@ class _MyHomePageState extends State<MyHomePage> {
     // than having to individually change instances of widgets.
     return Scaffold(
       appBar: NavbarFactory.textTitleBar("首页"),
-      body: SmartRefresher(
-          // 是否生效下拉，上拉
-          enablePullDown: true,
-          enablePullUp: true,
-          // 顶部下拉时的显示UI
-          header: WaterDropHeader(),
-          // 顶部上拉时执行；
-          onLoading: _onLoading,
-          // 顶部下拉时执行
-          onRefresh: _onRefresh,
-          // 底部上拉时的显示
-          footer: CustomFooter(
-            loadStyle: LoadStyle.ShowWhenLoading,
-            height: 6.vh,
-            builder: (BuildContext context, LoadStatus? mode) {
-              //return SizedBox.shrink();
-              Widget body;
-              if (mode == LoadStatus.idle) {
-                //如果不需要可以返回一个看不到的元素：Offstage【用SizedBox.shrink()比较好，一个没有大小的组件】
-                //body = Text("向上拉可刷新数据");
-                // 没用，生效了上拉，这个组件会自动为它留一个位置
-                //body = SizedBox.shrink();
-                return Offstage(
-                  offstage: false,
-                );
-              } else if (mode == LoadStatus.loading) {
-                // 转圈圈
-                body = CupertinoActivityIndicator();
-              } else if (mode == LoadStatus.failed) {
-                body = Text("Load Failed!Click retry!");
-              } else if (mode == LoadStatus.canLoading) {
-                // 应该是指当前的list的数据比count要少的时候？
-                body = Text("释放上拉操作开始获取数据");
-              } else {
-                body = Text("No more Data");
-              }
-              return Container(
-                //height: 10.vh,
-                child: Center(child: body),
-              );
-            },
-          ),
-          controller: _refreshController,
-          // FLAG 这个ListView是布局而不是数据展示，即它可以认为是Column，如果ListView内部还需要ListView，则要求子ListView
-          // 有具体的高度【而且貌似子ListView不能触发刷新】【但是ListView自带Scroll，因此最后一个content 的元素可以设置大小大一点
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Stack(
-                  alignment: Alignment.bottomCenter,
+      body: NestedScrollView(
+          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+            return <Widget>[
+              SliverAppBar(
+                expandedHeight: 20.vh,
+                pinned: true,
+                floating: true,
+                centerTitle: false,
+                snap: false,
+                primary: true,
+                titleSpacing: 0,
+                toolbarHeight: 6.vh,
+                title: Text('首页'),
+                // 应该是阴影相关
+                //elevation: 20.vh,
+                forceElevated: innerBoxIsScrolled,
+                flexibleSpace: FlexibleSpaceBar(
+                  titlePadding: EdgeInsets.zero,
+                  // TODO background最好用静态图；
+                  background: Stack(
+                    alignment: Alignment.bottomCenter,
+                    children: [
+                      SizedBox(
+                        height: 20.vh,
+                        width: 100.vw,
+                        child: CarouselSlider(
+                          options: CarouselOptions(
+                              height: 20.vh,
+                              autoPlay: true,
+                              autoPlayInterval: Duration(seconds: 3),
+                              autoPlayCurve: Curves.fastOutSlowIn,
+                              viewportFraction: 1,
+                              enlargeCenterPage: true,
+                              initialPage: _currentSwiperItemIdx,
+                              onPageChanged: (index, reason) {
+                                setState(() {
+                                  _currentSwiperItemIdx = index;
+                                });
+                              }),
+                          items: _swiperItems.map((i) {
+                            return Builder(
+                              builder: (BuildContext context) {
+                                return Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    decoration:
+                                        BoxDecoration(color: Colors.amber),
+                                    child: Text(
+                                      'text $i',
+                                      style: TextStyle(fontSize: 1.rem),
+                                    ));
+                              },
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                      Positioned(
+                        bottom: 1.vh,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: _swiperItems.map((item) {
+                            return GestureDetector(
+                              child: Container(
+                                width: max(1.vh, 1.vw),
+                                height: max(1.vh, 1.vw),
+                                margin: EdgeInsets.symmetric(
+                                    horizontal: max(0.5.vh, 0.5.vw)),
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: (Theme.of(context).brightness ==
+                                                Brightness.dark
+                                            ? Colors.white
+                                            : Colors.black)
+                                        .withOpacity(_swiperItems[
+                                                    _currentSwiperItemIdx] ==
+                                                item
+                                            ? 0.9
+                                            : 0.4)),
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              )
+            ];
+          },
+          body: SmartRefresher(
+              // 是否生效下拉，上拉
+              enablePullDown: true,
+              enablePullUp: true,
+              // 顶部下拉时的显示UI
+              header: WaterDropHeader(),
+              // 顶部上拉时执行；
+              onLoading: _onLoading,
+              // 顶部下拉时执行
+              onRefresh: _onRefresh,
+              // 底部上拉时的显示
+              footer: CustomFooter(
+                loadStyle: LoadStyle.ShowWhenLoading,
+                height: 6.vh,
+                builder: (BuildContext context, LoadStatus? mode) {
+                  //return SizedBox.shrink();
+                  Widget body;
+                  if (mode == LoadStatus.idle) {
+                    //如果不需要可以返回一个看不到的元素：Offstage【用SizedBox.shrink()比较好，一个没有大小的组件】
+                    //body = Text("向上拉可刷新数据");
+                    // 没用，生效了上拉，这个组件会自动为它留一个位置
+                    //body = SizedBox.shrink();
+                    return Offstage(
+                      offstage: false,
+                    );
+                  } else if (mode == LoadStatus.loading) {
+                    // 转圈圈
+                    body = CupertinoActivityIndicator();
+                  } else if (mode == LoadStatus.failed) {
+                    body = Text("Load Failed!Click retry!");
+                  } else if (mode == LoadStatus.canLoading) {
+                    // 应该是指当前的list的数据比count要少的时候？
+                    body = Text("释放上拉操作开始获取数据");
+                  } else {
+                    body = Text("No more Data");
+                  }
+                  return Container(
+                    //height: 10.vh,
+                    child: Center(child: body),
+                  );
+                },
+              ),
+              controller: _refreshController,
+              // FLAG 这个ListView是布局而不是数据展示，即它可以认为是Column，如果ListView内部还需要ListView，则要求子ListView
+              // 有具体的高度【而且貌似子ListView不能触发刷新】【但是ListView自带Scroll，因此最后一个content 的元素可以设置大小大一点
+              child: SingleChildScrollView(
+                child: Column(
                   children: [
-                    SizedBox(
-                      height: 12.vh,
-                      width: 90.vw,
-                      child: CarouselSlider(
-                        options: CarouselOptions(
-
-                            /// .h是高度相对父元素百分之百，.w是宽度相对父元素百分之百【错】
-                            height: 100.h,
-                            autoPlay: true,
-                            autoPlayInterval: Duration(seconds: 3),
-                            autoPlayCurve: Curves.fastOutSlowIn,
-                            viewportFraction: 1,
-                            enlargeCenterPage: true,
-                            initialPage: _currentSwiperItemIdx,
-                            onPageChanged: (index, reason) {
-                              setState(() {
-                                _currentSwiperItemIdx = index;
-                              });
-                            }),
-                        items: _swiperItems.map((i) {
-                          return Builder(
-                            builder: (BuildContext context) {
-                              return Container(
-                                  width: MediaQuery.of(context).size.width,
-                                  decoration:
-                                      BoxDecoration(color: Colors.amber),
-                                  child: Text(
-                                    'text $i',
-                                    style: TextStyle(fontSize: 1.rem),
-                                  ));
-                            },
-                          );
-                        }).toList(),
-                      ),
-                    ),
-                    Positioned(
-                      bottom: 1.vh,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: _swiperItems.map((item) {
-                          return GestureDetector(
-                            child: Container(
-                              width: max(1.vh, 1.vw),
-                              height: max(1.vh, 1.vw),
-                              margin: EdgeInsets.symmetric(
-                                  horizontal: max(0.5.vh, 0.5.vw)),
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: (Theme.of(context).brightness ==
-                                              Brightness.dark
-                                          ? Colors.white
-                                          : Colors.black)
-                                      .withOpacity(
-                                          _swiperItems[_currentSwiperItemIdx] ==
-                                                  item
-                                              ? 0.9
-                                              : 0.4)),
-                            ),
-                          );
-                        }).toList(),
-                      ),
-                    )
-                  ],
-                ),
-                Container(
-                  height: 20.vh,
-                  width: 100.vw,
-                  color: Colors.blue,
-                ),
-
-                FixedLikeComponent(
                     Container(
                       height: 20.vh,
-                      width: 20.vh,
-                      color: Colors.pink,
+                      width: 100.vw,
+                      color: Colors.blue,
                     ),
-                    Offset(5.vw, 22.vh)),
-                TextButton(
-                    onPressed: () {
-                      showModalBottomSheet(
-                        backgroundColor: Colors.transparent,
-                        context: context,
-                        builder: (BuildContext context) {
-                          return Container(
-                            height: 200,
-                            width: double.infinity,
-                            child: Center(child: Text("showModalBottomSheet")),
-                            decoration: BoxDecoration(
-                              color: Colors.blueAccent,
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(25),
-                                topRight: Radius.circular(25),
-                              ),
-                            ),
+
+                    FixedLikeComponent(
+                        Container(
+                          height: 20.vh,
+                          width: 20.vh,
+                          color: Colors.pink,
+                        ),
+                        Offset(5.vw, 22.vh)),
+                    TextButton(
+                        onPressed: () {
+                          showModalBottomSheet(
+                            backgroundColor: Colors.transparent,
+                            context: context,
+                            builder: (BuildContext context) {
+                              return Container(
+                                height: 200,
+                                width: double.infinity,
+                                child:
+                                    Center(child: Text("showModalBottomSheet")),
+                                decoration: BoxDecoration(
+                                  color: Colors.blueAccent,
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(25),
+                                    topRight: Radius.circular(25),
+                                  ),
+                                ),
+                              );
+                            },
                           );
                         },
-                      );
-                    },
-                    child: Text('bottomPopup')),
-                TextButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/detail',
-                          arguments: "aaaa");
-                    },
-                    child: Text('detail')),
-                TextButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/needAuth',
-                          arguments: "bbb");
-                    },
-                    child: Text('auth')),
-                //Offstage(),
-                //SizedBox.shrink(),
-                //Visibility(child: Text('kkk'), visible: false,),
-                //Opacity(opacity: 0.2, child: Text('kkk'),),
-                Container(
-                  height: 100.vh,
-                  color: Colors.red,
-                  // TODO 这个ListView的下拉不会导致刷新【似乎是Scroll事件没有冒泡？】
-                  /* child: ListView.builder(
+                        child: Text('bottomPopup')),
+                    TextButton(
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/detail',
+                              arguments: "aaaa");
+                        },
+                        child: Text('detail')),
+                    TextButton(
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/needAuth',
+                              arguments: "bbb");
+                        },
+                        child: Text('auth')),
+                    //Offstage(),
+                    //SizedBox.shrink(),
+                    //Visibility(child: Text('kkk'), visible: false,),
+                    //Opacity(opacity: 0.2, child: Text('kkk'),),
+                    Container(
+                      height: 100.vh,
+                      color: Colors.red,
+                      // TODO 这个ListView的下拉不会导致刷新【似乎是Scroll事件没有冒泡？】
+                      /* child: ListView.builder(
                   itemBuilder: (context, index) {
                     return ListTile(
                       title: Text('KKK $index'),
@@ -258,10 +280,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   },
                   itemCount: 30,
                 ), */
-                )
-              ],
-            ),
-          ) /*  ListView.builder(
+                    )
+                  ],
+                ),
+              )) /*  ListView.builder(
           itemBuilder: (context, index) {
             if (index == 0) {
               return ;

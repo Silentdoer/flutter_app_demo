@@ -31,6 +31,8 @@ class NeedAuthPage extends StatelessWidget {
                         //Navigator.of(context).pushNamed(settings.name!);
                         //Navigator.of(context).push(MaterialPageRoute(builder: routeMap[settings.name!]!));
                         Navigator.of(context).pushReplacement(MaterialPageRoute(builder: routeMap[settings.name!]!));
+                      } else {
+                        Navigator.of(context).pop();
                       }
                       // 居然能获取overlay
                       //Navigator.of(context).overlay
