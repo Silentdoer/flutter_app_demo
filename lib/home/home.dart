@@ -69,6 +69,25 @@ class _MyHomePageState extends State<MyHomePage> {
     _refreshController.loadComplete();
   }
 
+  double opacityTitle = 0;
+
+  // 通过controller来实现玛瑙湾那种最大状态拉伸不显示标题只显示背景，最小状态只显示标题
+  ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _scrollController.addListener(() {
+      var offset = _scrollController.offset;
+      if (offset <= (20.vh - 6.vh)) {
+        setState(() {
+          opacityTitle = offset / (20.vh - 6.vh);
+        });
+      }
+    });
+  }
+
   /// container 类似div【有比较多的属性可以设置，但是也是基于组合，即它内部其实有很多个组件】
   @override
   Widget build(BuildContext context) {
@@ -81,89 +100,95 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: NavbarFactory.textTitleBar("首页"),
       body: NestedScrollView(
+          controller: _scrollController,
           headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
             return <Widget>[
               SliverAppBar(
                 expandedHeight: 20.vh,
                 pinned: true,
-                floating: true,
+                floating: false,
                 centerTitle: false,
                 snap: false,
                 primary: true,
                 titleSpacing: 0,
                 toolbarHeight: 6.vh,
-                title: Text('首页'),
+                title: Opacity(
+                    opacity: opacityTitle,
+                    child: Container(
+                      height: 6.vh,
+                      width: 100.vw,
+                      color: Colors.red,
+                      child: Text('首页'),
+                    )),
+                //title:Opacity(opacity: opacityTitle, child:Text('首页')),
                 // 应该是阴影相关
                 //elevation: 20.vh,
                 forceElevated: innerBoxIsScrolled,
-                flexibleSpace: FlexibleSpaceBar(
-                  titlePadding: EdgeInsets.zero,
-                  // TODO background最好用静态图；
-                  background: Stack(
-                    alignment: Alignment.bottomCenter,
-                    children: [
-                      SizedBox(
-                        height: 20.vh,
-                        width: 100.vw,
-                        child: CarouselSlider(
-                          options: CarouselOptions(
-                              height: 20.vh,
-                              autoPlay: true,
-                              autoPlayInterval: Duration(seconds: 3),
-                              autoPlayCurve: Curves.fastOutSlowIn,
-                              viewportFraction: 1,
-                              enlargeCenterPage: true,
-                              initialPage: _currentSwiperItemIdx,
-                              onPageChanged: (index, reason) {
-                                setState(() {
-                                  _currentSwiperItemIdx = index;
-                                });
-                              }),
-                          items: _swiperItems.map((i) {
-                            return Builder(
-                              builder: (BuildContext context) {
-                                return Container(
-                                    width: MediaQuery.of(context).size.width,
-                                    decoration:
-                                        BoxDecoration(color: Colors.amber),
-                                    child: Text(
-                                      'text $i',
-                                      style: TextStyle(fontSize: 1.rem),
-                                    ));
-                              },
-                            );
-                          }).toList(),
-                        ),
+                // 这个元素是会在伸缩NestedScrollView时不断调用创建的，当不能伸缩时不会调用update
+                flexibleSpace: Stack(
+                  alignment: Alignment.bottomCenter,
+                  children: [
+                    SizedBox(
+                      height: 20.vh,
+                      width: 100.vw,
+                      child: CarouselSlider(
+                        options: CarouselOptions(
+                            height: 20.vh,
+                            autoPlay: true,
+                            autoPlayInterval: Duration(seconds: 3),
+                            autoPlayCurve: Curves.fastOutSlowIn,
+                            viewportFraction: 1,
+                            enlargeCenterPage: true,
+                            initialPage: _currentSwiperItemIdx,
+                            onPageChanged: (index, reason) {
+                              setState(() {
+                                _currentSwiperItemIdx = index;
+                              });
+                            }),
+                        items: _swiperItems.map((i) {
+                          return Builder(
+                            builder: (BuildContext context) {
+                              return Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  decoration:
+                                      BoxDecoration(color: Colors.amber),
+                                  child: Text(
+                                    'text $i',
+                                    style: TextStyle(fontSize: 1.rem),
+                                  ));
+                            },
+                          );
+                        }).toList(),
                       ),
-                      Positioned(
-                        bottom: 1.vh,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: _swiperItems.map((item) {
-                            return GestureDetector(
-                              child: Container(
-                                width: max(1.vh, 1.vw),
-                                height: max(1.vh, 1.vw),
-                                margin: EdgeInsets.symmetric(
-                                    horizontal: max(0.5.vh, 0.5.vw)),
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: (Theme.of(context).brightness ==
-                                                Brightness.dark
-                                            ? Colors.white
-                                            : Colors.black)
-                                        .withOpacity(_swiperItems[
-                                                    _currentSwiperItemIdx] ==
-                                                item
-                                            ? 0.9
-                                            : 0.4)),
-                              ),
-                            );
-                          }).toList(),
-                        ),
-                      )
-                    ],
-                  ),
+                    ),
+                    Positioned(
+                      bottom: 1.vh,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: _swiperItems.map((item) {
+                          return GestureDetector(
+                            child: Container(
+                              width: max(1.vh, 1.vw),
+                              height: max(1.vh, 1.vw),
+                              margin: EdgeInsets.symmetric(
+                                  horizontal: max(0.5.vh, 0.5.vw)),
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: (Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Colors.white
+                                          : Colors.black)
+                                      .withOpacity(
+                                          _swiperItems[_currentSwiperItemIdx] ==
+                                                  item
+                                              ? 0.9
+                                              : 0.4)),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    )
+                  ],
                 ),
               )
             ];
