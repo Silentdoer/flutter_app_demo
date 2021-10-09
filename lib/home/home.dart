@@ -289,6 +289,11 @@ class _MyHomePageState extends State<MyHomePage> {
                               arguments: "bbb");
                         },
                         child: Text('auth')),
+                    TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: Text('back[home页不该有back按钮]')),
                     //Offstage(),
                     //SizedBox.shrink(),
                     //Visibility(child: Text('kkk'), visible: false,),
