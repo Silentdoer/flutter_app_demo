@@ -14,7 +14,7 @@ class NeedAuthPage extends StatefulWidget {
 class _NeedAuthPageState extends State<NeedAuthPage>
     with SingleTickerProviderStateMixin {
   // 点击按钮后将100*100的时间内逐步变成200*200
-  double _size = 100;
+  late Animation animationSize;
 
   String buttonText = '点我放大';
 
@@ -29,24 +29,30 @@ class _NeedAuthPageState extends State<NeedAuthPage>
             // value 0 到 1【频率是怎么样？不管duration是多少，都是执行N次，比如都触发100次？还是说按60FPS，即1秒钟60次？】
             // 好像确实是60 FPS
             // forward 是从0到1（可以设置起止边界数值），而reverse则是从1到0
-            _size = 100 + 100 * _animationController.value;
+            // 有了Animation后可以不需要手动计算大小了
+            //_size = 100 + 100 * _animationController.value;
             // 触发update，上面的代码一般放里面，在上面也行
             setState(() {});
           })
           ..addStatusListener((status) {
-            if (status == AnimationStatus.completed || status == AnimationStatus.dismissed) {
-              if (_size == 100) {
-                setState(() {
-                  buttonText = '点我放大';
-                });
-              } else if (_size == 200) {
-                setState(() {
-                  buttonText = '点我缩小';
-                });
-              }
+            //if (status == AnimationStatus.completed || status == AnimationStatus.dismissed) {
+            if (animationSize.isDismissed) {
+              setState(() {
+                buttonText = '点我放大';
+              });
+            } else if (animationSize.isCompleted) {
+              setState(() {
+                buttonText = '点我缩小';
+              });
             }
-            print('animation status:$status');
+            //}
+            print(
+                'animation status:$status, animationSizeStatus:${animationSize.status} ${animationSize.isCompleted} ${animationSize.isDismissed}');
           });
+
+    // 注意是100.0，写成100会导致value的类型变成int?；这里还可以通过chain增加动画的Curve效果
+    animationSize =
+        Tween(begin: 100.0, end: 200.0).chain(CurveTween(curve: Curves.bounceIn)).animate(_animationController);
   }
 
   @override
@@ -86,8 +92,8 @@ class _NeedAuthPageState extends State<NeedAuthPage>
                             }
                           },
                           child: Container(
-                            height: _size,
-                            width: _size,
+                            height: animationSize.value,
+                            width: animationSize.value,
                             color: Colors.grey,
                             alignment: Alignment.center,
                             child: Text(
