@@ -15,6 +15,8 @@ var routeMap = <String, WidgetBuilder>{
   '/needAuth': (context) => NeedAuthPage(),
 };
 
+late Widget globalWidght;
+
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
@@ -22,7 +24,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Resize(
-        builder: () => MaterialApp(
+        builder: () { globalWidght =  MaterialApp(
               initialRoute: '/',
               //routes: routeMap,
               // 有了这个就不能有routes，否则这个拦截无效；
@@ -53,6 +55,6 @@ class MyApp extends StatelessWidget {
               ),
               //有了initialRoute+routes(routes里有initialRoute前提下)后home就不能写了；
               //home: const MyHomePage(title: 'Flutter Demo Home Page'),
-            ));
+            );return globalWidght;});
   }
 }
