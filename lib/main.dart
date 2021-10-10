@@ -37,7 +37,11 @@ class MyApp extends StatelessWidget {
             return MaterialPageRoute(
                 builder: routeMap[settings.name]!, settings: settings);
           }
+          // TODO 注意，这里是可以返回null的，当是null的时候就会去触发onUnknownRoute了，不过也说明onUnknownRoute其实是没用的
+          // 因为完全可以在这里处理404页面
+          return null;
         },
+        //onUnknownRoute: ,
         title: 'Flutter Demo',
         theme: ThemeData(
           // This is the theme of your application.
