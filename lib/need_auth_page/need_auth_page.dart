@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_demo/config/routes.dart';
-import 'package:flutter_app_demo/main.dart';
 
 class NeedAuthPage extends StatefulWidget {
+  static String route = '/needAuth';
+
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -52,8 +53,9 @@ class _NeedAuthPageState extends State<NeedAuthPage>
           });
 
     // 注意是100.0，写成100会导致value的类型变成int?；这里还可以通过chain增加动画的Curve效果
-    animationSize =
-        Tween(begin: 100.0, end: 200.0).chain(CurveTween(curve: Curves.bounceIn)).animate(_animationController);
+    animationSize = Tween(begin: 100.0, end: 200.0)
+        .chain(CurveTween(curve: Curves.bounceIn))
+        .animate(_animationController);
   }
 
   @override
@@ -119,7 +121,7 @@ class _NeedAuthPageState extends State<NeedAuthPage>
                               //Navigator.of(context).push(MaterialPageRoute(builder: routeMap[settings.name!]!));
                               Navigator.of(context).pushReplacement(
                                   MaterialPageRoute(
-                                      builder: routeMap[settings.name!]!));
+                                      builder: RouterTable.routeMap[settings.name!]!));
                             } else {
                               Navigator.of(context).pop();
                             }

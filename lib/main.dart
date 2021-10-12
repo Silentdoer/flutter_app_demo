@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app_demo/config/routes.dart';
-import 'package:flutter_app_demo/detail_page/detail_page.dart';
-import 'package:flutter_app_demo/need_auth_page/need_auth_page.dart';
 import 'package:resize/resize.dart';
-
-import 'home/home.dart';
 
 void main() {
   runApp(const MyApp());
@@ -24,24 +20,8 @@ class MyApp extends StatelessWidget {
         initialRoute: '/',
         //routes: routeMap,
         // 有了这个就不能有routes，否则这个拦截无效；
-        onGenerateRoute: (RouteSettings settings) {
-          // 主页面/加载也会触发
-          // pop(..)的不会触发
-          print('back 触发吗？${settings.name}, ${settings.arguments}');
-          if (settings.name == '/detail') {
-            // login
-            // 这里不会二次触发onGenerateRoute
-            return MaterialPageRoute(
-                builder: routeMap['/needAuth']!, settings: settings);
-          } else {
-            return MaterialPageRoute(
-                builder: routeMap[settings.name]!, settings: settings);
-          }
-          // TODO 注意，这里是可以返回null的，当是null的时候就会去触发onUnknownRoute了，不过也说明onUnknownRoute其实是没用的
-          // 因为完全可以在这里处理404页面
-          return null;
-        },
-        //onUnknownRoute: ,
+        onGenerateRoute: RouterTable.onGenerateRoute,
+        onUnknownRoute: RouterTable.onUnknownRoute,
         title: 'Flutter Demo',
         theme: ThemeData(
           // This is the theme of your application.

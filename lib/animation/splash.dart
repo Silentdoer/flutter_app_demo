@@ -68,7 +68,7 @@ class _SplashScreenState extends State<SplashScreen>
           */
           Navigator.of(context).pushAndRemoveUntil(
               // 动画结束跳转到首页，false可以确保动画结束后清除所有的路由栈跳到首页【是remove而非pop】
-              MaterialPageRoute(builder: routeMap['/home']!),
+              MaterialPageRoute(builder: RouterTable.routeMap['/home']!),
               (route) => route == false);
           _countdownTimer.cancel();
         } else {
@@ -120,7 +120,7 @@ class _SplashScreenState extends State<SplashScreen>
                         */
                         Navigator.of(context).pushAndRemoveUntil(
                             // 动画结束跳转到首页，false可以确保动画结束后清除所有的路由栈跳到首页【是remove而非pop】
-                            MaterialPageRoute(builder: routeMap['/home']!),
+                            MaterialPageRoute(builder: RouterTable.routeMap['/home']!),
                             (route) => route == false);
                         _countdownTimer.cancel();
                       },

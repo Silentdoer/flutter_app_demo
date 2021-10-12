@@ -37,7 +37,10 @@ class _FixedLikeComponentState extends State<FixedLikeComponent> {
             // 弹窗的width，child的with【即一个是弹窗容器的width，一个是弹窗容器子容器的width】
             // 这里不设置由子容器来决定弹窗大小
             //width: size.width,
-            child: Material(elevation: 4.0, child: child)));
+            child: Material(elevation: 4.0, child: InkWell(child: child, onDoubleTap: () {
+              // TODO 双击移除fixed 组件
+              this._overlayEntry?.remove();
+            },))));
   }
 
   @override

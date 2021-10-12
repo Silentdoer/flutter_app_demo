@@ -252,6 +252,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           height: 20.vh,
                           width: 20.vh,
                           color: Colors.pink,
+                          
                         ),
                         Offset(5.vw, 22.vh)),
                     TextButton(
@@ -294,6 +295,18 @@ class _MyHomePageState extends State<MyHomePage> {
                           Navigator.pop(context);
                         },
                         child: Text('back[home页不该有back按钮]')),
+                    TextButton(
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/unknown',
+                              arguments: "ccc");
+                        },
+                        child: Text('unkonwn')),
+                    TextButton(
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/listview',
+                              arguments: "ddd");
+                        },
+                        child: Text('listview')),
                     //Offstage(),
                     //SizedBox.shrink(),
                     //Visibility(child: Text('kkk'), visible: false,),
