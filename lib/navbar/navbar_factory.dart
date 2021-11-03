@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:resize/resize.dart';
+import 'package:scaled_size/scaled_size.dart';
 
 class NavbarFactory {
   NavbarFactory._();

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:resize/resize.dart';
+import 'package:scaled_size/scaled_size.dart';
 
 /// 点击按钮显示悬浮框
 class PopupFloatingButton extends StatefulWidget {

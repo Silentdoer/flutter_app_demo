@@ -116,9 +116,12 @@ class _ListViewPageState extends State<ListViewPage> {
 
   Future<List<int>> _getData() async {
     return Future.delayed(Duration(seconds: 3), () {
+      // 如果listData的数据量到达50，则假定数据库里没有数据了
+      if (listData.length > 50) {
+        return [];
+      }
       List<int> tempList = List.generate(10, (i) => i);
       return tempList;
     });
-    ;
   }
 }

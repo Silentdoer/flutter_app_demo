@@ -1,6 +1,7 @@
+import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_demo/config/routes.dart';
-import 'package:resize/resize.dart';
+import 'package:scaled_size/scaled_size.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,8 +15,10 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return Resize(builder: () {
+    return ScaledSize(builder: () {
       globalWidght = MaterialApp(
+        builder: BotToastInit(), //1. call BotToastInit
+        navigatorObservers: [BotToastNavigatorObserver()],
         // TODO 这里有点问题，哪怕initialRoute值是其他的如/loading，启动app后也是首先进/这个路由里来；
         initialRoute: '/',
         //routes: routeMap,

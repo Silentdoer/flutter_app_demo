@@ -1,13 +1,15 @@
 import 'dart:math';
 
+import 'package:bot_toast/bot_toast.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_app_demo/floating_button/fixed_like_component.dart';
 import 'package:flutter_app_demo/floating_button/popup_floating_button.dart';
 import 'package:flutter_app_demo/navbar/navbar_factory.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:resize/resize.dart';
+import 'package:scaled_size/scaled_size.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
@@ -252,7 +254,6 @@ class _MyHomePageState extends State<MyHomePage> {
                           height: 20.vh,
                           width: 20.vh,
                           color: Colors.pink,
-                          
                         ),
                         Offset(5.vw, 22.vh)),
                     TextButton(
@@ -307,6 +308,24 @@ class _MyHomePageState extends State<MyHomePage> {
                               arguments: "ddd");
                         },
                         child: Text('listview')),
+                    TextButton(
+                        onPressed: () {
+                          // TODO 原来颜色可以这么弄成透明
+                          BotToast.showSimpleNotification(
+                              title: '提示(长按复制详情)',
+                              backgroundColor: Colors.red.withOpacity(.8),
+                              closeIcon: const Icon(Icons.access_alarms_sharp),
+                              duration: const Duration(seconds: 8),
+                              subTitle: '详细内容区',
+                              onLongPress: () {
+                                Clipboard.setData(const ClipboardData(text: '详细内容区'));
+                                BotToast.showText(
+                                    text: '复制详情成功',
+                                    duration: const Duration(seconds: 2),
+                                    contentColor: Colors.black.withOpacity(.5));
+                              });
+                        },
+                        child: const Text('toast_alert_message')),
                     //Offstage(),
                     //SizedBox.shrink(),
                     //Visibility(child: Text('kkk'), visible: false,),
